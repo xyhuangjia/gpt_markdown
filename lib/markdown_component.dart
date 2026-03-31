@@ -417,7 +417,8 @@ class UnOrderedList extends BlockMd {
           config.copyWith(),
         ) ??
         UnorderedListView(
-          bulletColor: unorderedListTheme?.bulletColor ??
+          bulletColor:
+              unorderedListTheme?.bulletColor ??
               (config.style?.color ?? DefaultTextStyle.of(context).style.color),
           bulletSize: unorderedListTheme?.bulletSize ?? 0.3,
           spacing: unorderedListTheme?.bulletSpacing ?? 10,
@@ -526,7 +527,10 @@ class BoldMd extends InlineMd {
     final theme = GptMarkdownTheme.of(context);
     final boldStyle = theme.textStyle.bold;
     var conf = config.copyWith(
-      style: config.style?.merge(boldStyle) ?? boldStyle ?? const TextStyle(fontWeight: FontWeight.bold),
+      style:
+          config.style?.merge(boldStyle) ??
+          boldStyle ??
+          const TextStyle(fontWeight: FontWeight.bold),
     );
     return TextSpan(
       children: MarkdownComponent.generate(
@@ -554,7 +558,10 @@ class StrikeMd extends InlineMd {
     final theme = GptMarkdownTheme.of(context);
     final strikeStyle = theme.textStyle.strike;
     var conf = config.copyWith(
-      style: config.style?.merge(strikeStyle) ?? strikeStyle ?? const TextStyle(decoration: TextDecoration.lineThrough),
+      style:
+          config.style?.merge(strikeStyle) ??
+          strikeStyle ??
+          const TextStyle(decoration: TextDecoration.lineThrough),
     );
     return TextSpan(
       children: MarkdownComponent.generate(
@@ -585,7 +592,10 @@ class ItalicMd extends InlineMd {
     final theme = GptMarkdownTheme.of(context);
     final italicStyle = theme.textStyle.italic;
     var conf = config.copyWith(
-      style: config.style?.merge(italicStyle) ?? italicStyle ?? const TextStyle(fontStyle: FontStyle.italic),
+      style:
+          config.style?.merge(italicStyle) ??
+          italicStyle ??
+          const TextStyle(fontStyle: FontStyle.italic),
     );
     return TextSpan(
       children: MarkdownComponent.generate(context, "$data", conf, false),
@@ -622,12 +632,12 @@ class LatexMathMultiLine extends BlockMd {
                 tex,
                 textStyle: textStyle,
                 mathStyle: MathStyle.display,
-                textScaleFactor: latexTheme?.textScaleFactor ?? 1,
+                textScaleFactor: latexTheme.textScaleFactor ?? 1,
                 settings: const TexParserSettings(strict: Strict.ignore),
                 options: MathOptions(
                   sizeUnderTextStyle: MathSize.large,
                   color:
-                      latexTheme?.color ??
+                      latexTheme.color ??
                       config.style?.color ??
                       Theme.of(context).colorScheme.onSurface,
                   fontSize:
@@ -700,12 +710,12 @@ class LatexMath extends InlineMd {
                 tex,
                 textStyle: textStyle,
                 mathStyle: MathStyle.display,
-                textScaleFactor: latexTheme?.textScaleFactor ?? 1,
+                textScaleFactor: latexTheme.textScaleFactor ?? 1,
                 settings: const TexParserSettings(strict: Strict.ignore),
                 options: MathOptions(
                   sizeUnderTextStyle: MathSize.large,
                   color:
-                      latexTheme?.color ??
+                      latexTheme.color ??
                       config.style?.color ??
                       Theme.of(context).colorScheme.onSurface,
                   fontSize:
@@ -1019,7 +1029,7 @@ class ImageMd extends InlineMd {
     Widget themedImage = image;
 
     // Apply width percentage from theme
-    final widthPercentage = imageTheme?.widthPercentage;
+    final widthPercentage = imageTheme.widthPercentage;
     if (widthPercentage != null && width == null) {
       themedImage = LayoutBuilder(
         builder: (context, constraints) {
@@ -1032,15 +1042,15 @@ class ImageMd extends InlineMd {
     }
 
     // Apply alignment from theme
-    final alignment = imageTheme?.alignment ?? Alignment.center;
+    final alignment = imageTheme.alignment ?? Alignment.center;
     if (alignment != Alignment.center) {
-      themedImage = Align(
-        alignment: alignment,
-        child: themedImage,
-      );
+      themedImage = Align(alignment: alignment, child: themedImage);
     }
 
-    return WidgetSpan(alignment: PlaceholderAlignment.bottom, child: themedImage);
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.bottom,
+      child: themedImage,
+    );
   }
 }
 
@@ -1179,11 +1189,7 @@ class CodeBlockMd extends BlockMd {
     final theme = GptMarkdownTheme.of(context);
     final codeBlockTheme = theme.block.codeBlock;
 
-    return ThemedCodeField(
-      name: name,
-      codes: codes,
-      theme: codeBlockTheme,
-    );
+    return ThemedCodeField(name: name, codes: codes, theme: codeBlockTheme);
   }
 }
 

@@ -4,6 +4,7 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:gpt_markdown/custom_widgets/selectable_adapter.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
+import 'package:gpt_markdown/src/theme/theme.dart';
 import 'package:flutter_math_fork/flutter_math.dart';
 import 'package:watcher/watcher.dart';
 
@@ -31,9 +32,8 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         colorSchemeSeed: Colors.blue,
         extensions: [
-          GptMarkdownThemeData(
+          GptMarkdownThemeData.nice(
             brightness: Brightness.light,
-            highlightColor: Colors.red,
           ),
         ],
       ),
@@ -42,9 +42,8 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.dark,
         colorSchemeSeed: Colors.blue,
         extensions: [
-          GptMarkdownThemeData(
+          GptMarkdownThemeData.nice(
             brightness: Brightness.dark,
-            highlightColor: Colors.red,
           ),
         ],
       ),
@@ -52,9 +51,9 @@ class _MyAppState extends State<MyApp> {
         title: 'GptMarkdown',
         onPressed: () {
           setState(() {
-            _themeMode = (_themeMode == ThemeMode.dark)
-                ? ThemeMode.light
-                : ThemeMode.dark;
+            _themeMode = (_themeMode == ThemeMode.light)
+                ? ThemeMode.dark
+                : ThemeMode.light;
           });
         },
       ),
@@ -336,8 +335,12 @@ This document was created to test the robustness of Markdown parsers and to ensu
 // ''';
 
     return GptMarkdownTheme(
-      gptThemeData: GptMarkdownTheme.of(context).copyWith(
-        highlightColor: Colors.purple,
+      data: GptMarkdownTheme.of(context).copyWith(
+        textStyle: GptMarkdownTheme.of(context).textStyle.copyWith(
+              inlineCode: const InlineCodeStyle(
+                color: Colors.purple,
+              ),
+            ),
       ),
       child: Scaffold(
         appBar: AppBar(

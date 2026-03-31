@@ -5,8 +5,15 @@ import 'package:gpt_markdown/custom_widgets/custom_rb_cb.dart';
 import 'package:gpt_markdown/custom_widgets/indent_widget.dart';
 import 'package:gpt_markdown/custom_widgets/link_button.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
-import 'package:gpt_markdown/gpt_markdown.dart' show MarkdownComponent, MdWidget;
-import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote, ThemedCodeField, ThemedTable, ThemedCheckbox, ThemedRadio;
+import 'package:gpt_markdown/gpt_markdown.dart'
+    show MarkdownComponent, MdWidget;
+import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart'
+    show
+        ThemedBlockQuote,
+        ThemedCodeField,
+        ThemedTable,
+        ThemedCheckbox,
+        ThemedRadio;
 
 /// Serializes a Flutter span tree into a stable, comparable string format.
 ///
@@ -249,7 +256,8 @@ class MarkdownSerializer {
 
     // Link button
     if (widget is LinkButton) {
-      final urlPart = widget.url != null ? ', url="${_escapeText(widget.url!)}"' : '';
+      final urlPart =
+          widget.url != null ? ', url="${_escapeText(widget.url!)}"' : '';
       _write('LINK("${_escapeText(widget.text)}"$urlPart)');
       return;
     }
@@ -384,7 +392,8 @@ class MarkdownSerializer {
       for (int i = 0; i < table.maxCol; i++) {
         final cell = row[i] ?? '';
         // Skip alignment separator patterns like :--- or :--:
-        if (!RegExp(r"^:?--+:?$").hasMatch(cell.trim()) && cell.trim().isNotEmpty) {
+        if (!RegExp(r"^:?--+:?$").hasMatch(cell.trim()) &&
+            cell.trim().isNotEmpty) {
           cells.add('"${_escapeText(cell.trim())}"');
         }
       }

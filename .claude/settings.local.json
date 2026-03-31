@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(openspec list:*)",
+      "Bash(flutter test:*)",
+      "Bash(openspec new:*)",
+      "Bash(openspec status:*)",
+      "Bash(openspec instructions:*)",
+      "Bash(ls:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(mkdir -p ~/.pua)",
+      "Bash(~/.pua/config.json)",
+      "Bash(echo \"> [PUA OFF] PUA 默认模式和反馈收集已关闭。需要时手动 /pua:pua 触发。\")"
+    ]
+  }
+}

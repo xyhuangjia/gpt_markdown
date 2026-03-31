@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../custom_widgets/markdown_config.dart';
 import '../../theme/styles/list_style.dart' as md_theme;
 import '../../theme/theme.dart';
 
 /// Themed heading widget for h1-h6 with CSS-like decorations
 class ThemedHeading extends StatelessWidget {
-
   const ThemedHeading({
     super.key,
     required this.level,
@@ -49,11 +47,16 @@ class ThemedHeading extends StatelessWidget {
               ),
               padding: decoration.padding,
               child: Text.rich(
-                TextSpan(children: contentSpans, style: TextStyle(color: decoration.textColor)),
+                TextSpan(
+                  children: contentSpans,
+                  style: TextStyle(color: decoration.textColor),
+                ),
               ),
             ),
-            if (decoration.marginRight > 0) SizedBox(width: decoration.marginRight),
-            if (suffixStyle != null && suffixStyle!.show) suffixStyle!.build(context),
+            if (decoration.marginRight > 0)
+              SizedBox(width: decoration.marginRight),
+            if (suffixStyle != null && suffixStyle!.show)
+              suffixStyle!.build(context),
           ],
         ),
         if (headingStyle!.borderBottom != null)
@@ -76,7 +79,9 @@ class ThemedHeading extends StatelessWidget {
         Divider(
           height: theme.block.horizontalRule?.thickness ?? 1,
           thickness: theme.block.horizontalRule?.thickness ?? 1,
-          color: theme.block.horizontalRule?.color ?? Theme.of(context).colorScheme.outline,
+          color:
+              theme.block.horizontalRule?.color ??
+              Theme.of(context).colorScheme.outline,
         ),
       ],
     );
@@ -112,9 +117,10 @@ class _ThemedLinkState extends State<ThemedLink> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme ?? const MarkdownLinkTheme();
-    final effectiveColor = _hovering
-        ? (theme.hoverColor ?? theme.color ?? Colors.blue)
-        : (theme.color ?? Colors.blue);
+    final effectiveColor =
+        _hovering
+            ? (theme.hoverColor ?? theme.color ?? Colors.blue)
+            : (theme.color ?? Colors.blue);
     return MouseRegion(
       cursor: widget.theme?.cursor ?? SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovering = true),
@@ -139,11 +145,13 @@ class ThemedCodeField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTheme = theme ?? CodeBlockTheme(
-      backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
-      textStyle: const TextStyle(fontFamily: 'JetBrainsMono', fontSize: 14),
-      borderRadius: BorderRadius.circular(8),
-    );
+    final effectiveTheme =
+        theme ??
+        CodeBlockTheme(
+          backgroundColor: Theme.of(context).colorScheme.onInverseSurface,
+          textStyle: const TextStyle(fontFamily: 'JetBrainsMono', fontSize: 14),
+          borderRadius: BorderRadius.circular(8),
+        );
     return Material(
       color: effectiveTheme.backgroundColor,
       borderRadius: effectiveTheme.borderRadius ?? BorderRadius.circular(8),
@@ -151,16 +159,21 @@ class ThemedCodeField extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: effectiveTheme.headerPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding:
+                effectiveTheme.headerPadding ??
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
                 Text(name, style: effectiveTheme.labelTextStyle),
                 const Spacer(),
                 TextButton.icon(
                   style: TextButton.styleFrom(
-                    foregroundColor: effectiveTheme.copyButtonColor ?? Theme.of(context).colorScheme.onSurface,
+                    foregroundColor:
+                        effectiveTheme.copyButtonColor ??
+                        Theme.of(context).colorScheme.onSurface,
                   ),
-                  onPressed: () => Clipboard.setData(ClipboardData(text: codes)),
+                  onPressed:
+                      () => Clipboard.setData(ClipboardData(text: codes)),
                   icon: const Icon(Icons.content_paste, size: 15),
                   label: const Text("Copy code"),
                 ),
@@ -194,17 +207,22 @@ class ThemedBlockQuote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTheme = theme ?? BlockQuoteTheme(
-      barColor: Theme.of(context).colorScheme.onSurfaceVariant,
-      barWidth: 3,
-    );
+    final effectiveTheme =
+        theme ??
+        BlockQuoteTheme(
+          barColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          barWidth: 3,
+        );
     return DecoratedBox(
       decoration: BoxDecoration(color: effectiveTheme.backgroundColor),
       child: IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(width: effectiveTheme.barWidth, color: effectiveTheme.barColor),
+            Container(
+              width: effectiveTheme.barWidth,
+              color: effectiveTheme.barColor,
+            ),
             Expanded(child: child),
           ],
         ),
@@ -243,7 +261,10 @@ class ThemedCheckbox extends StatelessWidget {
               onChanged: null,
               activeColor: effectiveTheme.activeColor,
               checkColor: effectiveTheme.checkColor,
-              side: BorderSide(color: effectiveTheme.inactiveColor ?? Colors.grey, width: 1),
+              side: BorderSide(
+                color: effectiveTheme.inactiveColor ?? Colors.grey,
+                width: 1,
+              ),
             ),
           ),
           SizedBox(width: effectiveTheme.spacing ?? 5),
@@ -319,10 +340,15 @@ class ThemedTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTheme = theme ?? TableTheme(
-      cellBorder: BorderSide(color: Theme.of(context).colorScheme.onSurface, width: 1),
-      cellPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    );
+    final effectiveTheme =
+        theme ??
+        TableTheme(
+          cellBorder: BorderSide(
+            color: Theme.of(context).colorScheme.onSurface,
+            width: 1,
+          ),
+          cellPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        );
     final controller = ScrollController();
     return Scrollbar(
       controller: controller,
@@ -335,7 +361,9 @@ class ThemedTable extends StatelessWidget {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           border: TableBorder.all(
             width: effectiveTheme.cellBorder?.width ?? 1,
-            color: effectiveTheme.cellBorder?.color ?? Theme.of(context).colorScheme.onSurface,
+            color:
+                effectiveTheme.cellBorder?.color ??
+                Theme.of(context).colorScheme.onSurface,
           ),
           children: _buildRows(effectiveTheme),
         ),
@@ -344,34 +372,49 @@ class ThemedTable extends StatelessWidget {
   }
 
   List<TableRow> _buildRows(TableTheme theme) {
-    return rows.asMap().entries.where((entry) {
-      if (hasHeader && entry.key == 1) return false;
-      return true;
-    }).map((entry) {
-      final isHeader = hasHeader && entry.key == 0;
-      return TableRow(
-        decoration: isHeader ? BoxDecoration(color: theme.headerBackgroundColor) : null,
-        children: List.generate(maxCol, (index) {
-          final e = entry.value;
-          final data = e[index] ?? "";
-          if (RegExp(r"^:?--+:?$").hasMatch(data.trim())) return const SizedBox();
-          return Padding(
-            padding: theme.cellPadding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Align(
-              alignment: _getAlignment(columnAlignments[index]),
-              child: Text(data.trim()),
-            ),
+    return rows
+        .asMap()
+        .entries
+        .where((entry) {
+          if (hasHeader && entry.key == 1) return false;
+          return true;
+        })
+        .map((entry) {
+          final isHeader = hasHeader && entry.key == 0;
+          return TableRow(
+            decoration:
+                isHeader
+                    ? BoxDecoration(color: theme.headerBackgroundColor)
+                    : null,
+            children: List.generate(maxCol, (index) {
+              final e = entry.value;
+              final data = e[index] ?? "";
+              if (RegExp(r"^:?--+:?$").hasMatch(data.trim())) {
+                return const SizedBox();
+              }
+              return Padding(
+                padding:
+                    theme.cellPadding ??
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Align(
+                  alignment: _getAlignment(columnAlignments[index]),
+                  child: Text(data.trim()),
+                ),
+              );
+            }),
           );
-        }),
-      );
-    }).toList();
+        })
+        .toList();
   }
 
   Alignment _getAlignment(TextAlign align) {
     switch (align) {
-      case TextAlign.center: return Alignment.center;
-      case TextAlign.right: return Alignment.centerRight;
-      default: return Alignment.centerLeft;
+      case TextAlign.center:
+        return Alignment.center;
+      case TextAlign.right:
+        return Alignment.centerRight;
+      default:
+        return Alignment.centerLeft;
     }
   }
 }
