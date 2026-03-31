@@ -290,8 +290,11 @@ class CheckBoxMd extends BlockMd {
     final GptMarkdownConfig config,
   ) {
     var match = this.exp.firstMatch(text.trim());
-    return CustomCb(
+    final theme = GptMarkdownTheme.of(context);
+    final checkboxTheme = theme.list.checkbox;
+    return ThemedCheckbox(
       value: ("${match?[1]}" == "x"),
+      theme: checkboxTheme,
       textDirection: config.textDirection,
       child: MdWidget(context, "${match?[2]}", false, config: config),
     );
@@ -310,8 +313,11 @@ class RadioButtonMd extends BlockMd {
     final GptMarkdownConfig config,
   ) {
     var match = this.exp.firstMatch(text.trim());
-    return CustomRb(
+    final theme = GptMarkdownTheme.of(context);
+    final radioTheme = theme.list.radio;
+    return ThemedRadio(
       value: ("${match?[1]}" == "x"),
+      theme: radioTheme,
       textDirection: config.textDirection,
       child: MdWidget(context, "${match?[2]}", false, config: config),
     );
@@ -481,22 +487,22 @@ class HighlightedText extends InlineMd {
       );
     }
 
+    // Use new layered theme system for inline code styling
+    final theme = GptMarkdownTheme.of(context);
+    final inlineCodeStyle = theme.textStyle.inlineCode;
+
     var style =
         config.style?.copyWith(
-          fontWeight: FontWeight.bold,
-          background:
-              Paint()
-                ..color = GptMarkdownTheme.of(context).highlightColor
-                ..strokeCap = StrokeCap.round
-                ..strokeJoin = StrokeJoin.round,
+          color: inlineCodeStyle?.color ?? config.style?.color,
+          backgroundColor: inlineCodeStyle?.background,
+          fontSize: inlineCodeStyle?.fontSize ?? config.style?.fontSize,
+          fontFamily: inlineCodeStyle?.fontFamily ?? config.style?.fontFamily,
         ) ??
         TextStyle(
-          fontWeight: FontWeight.bold,
-          background:
-              Paint()
-                ..color = GptMarkdownTheme.of(context).highlightColor
-                ..strokeCap = StrokeCap.round
-                ..strokeJoin = StrokeJoin.round,
+          color: inlineCodeStyle?.color,
+          backgroundColor: inlineCodeStyle?.background,
+          fontSize: inlineCodeStyle?.fontSize,
+          fontFamily: inlineCodeStyle?.fontFamily,
         );
 
     return TextSpan(text: highlightedText, style: style);

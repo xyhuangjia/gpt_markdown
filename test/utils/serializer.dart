@@ -6,7 +6,7 @@ import 'package:gpt_markdown/custom_widgets/indent_widget.dart';
 import 'package:gpt_markdown/custom_widgets/link_button.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart' show MarkdownComponent, MdWidget;
-import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote, ThemedCodeField, ThemedTable;
+import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote, ThemedCodeField, ThemedTable, ThemedCheckbox, ThemedRadio;
 
 /// Serializes a Flutter span tree into a stable, comparable string format.
 ///
@@ -90,8 +90,8 @@ class MarkdownSerializer {
       if (style.decoration == TextDecoration.underline) {
         modifiers.add('underline');
       }
-      // Highlight detection: check for background paint
-      if (style.background != null) {
+      // Highlight detection: check for background paint or backgroundColor
+      if (style.background != null || style.backgroundColor != null) {
         modifiers.add('highlight');
       }
     }
@@ -183,8 +183,26 @@ class MarkdownSerializer {
       return;
     }
 
+    // ThemedCheckbox (new theme system)
+    if (widget is ThemedCheckbox) {
+      _depth++;
+      final content = _serializeChildWidget(widget.child);
+      _depth--;
+      _write('CHECKBOX(checked=${widget.value}, $content)');
+      return;
+    }
+
     // Radio button
     if (widget is CustomRb) {
+      _depth++;
+      final content = _serializeChildWidget(widget.child);
+      _depth--;
+      _write('RADIO(checked=${widget.value}, $content)');
+      return;
+    }
+
+    // ThemedRadio (new theme system)
+    if (widget is ThemedRadio) {
       _depth++;
       final content = _serializeChildWidget(widget.child);
       _depth--;

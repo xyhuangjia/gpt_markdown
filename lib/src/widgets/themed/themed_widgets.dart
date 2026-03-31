@@ -236,12 +236,15 @@ class ThemedCheckbox extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Checkbox(
-            value: value,
-            onChanged: null,
-            activeColor: effectiveTheme.activeColor,
-            checkColor: effectiveTheme.checkColor,
-            side: BorderSide(color: effectiveTheme.inactiveColor ?? Colors.grey, width: 1),
+          Semantics(
+            explicitChildNodes: true,
+            child: Checkbox(
+              value: value,
+              onChanged: null,
+              activeColor: effectiveTheme.activeColor,
+              checkColor: effectiveTheme.checkColor,
+              side: BorderSide(color: effectiveTheme.inactiveColor ?? Colors.grey, width: 1),
+            ),
           ),
           SizedBox(width: effectiveTheme.spacing ?? 5),
           Flexible(child: child),
@@ -274,17 +277,20 @@ class ThemedRadio extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Radio<bool>(
-            value: true,
-            groupValue: value,
-            onChanged: null,
-            activeColor: effectiveTheme.activeColor,
-            fillColor: WidgetStateProperty.resolveWith((states) {
-              if (states.contains(WidgetState.selected)) {
-                return effectiveTheme.activeColor;
-              }
-              return effectiveTheme.inactiveColor ?? Colors.grey;
-            }),
+          Semantics(
+            explicitChildNodes: true,
+            child: Radio<bool>(
+              value: true,
+              groupValue: value,
+              onChanged: null,
+              activeColor: effectiveTheme.activeColor,
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return effectiveTheme.activeColor;
+                }
+                return effectiveTheme.inactiveColor ?? Colors.grey;
+              }),
+            ),
           ),
           SizedBox(width: effectiveTheme.spacing ?? 5),
           Flexible(child: child),
