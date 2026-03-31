@@ -201,42 +201,40 @@ class HTag extends BlockMd {
   ) {
     var theme = GptMarkdownTheme.of(context);
     var match = this.exp.firstMatch(text.trim());
-    var conf = config.copyWith(
-      style:
-          [
-            theme.h1,
-            theme.h2,
-            theme.h3,
-            theme.h4,
-            theme.h5,
-            theme.h6,
-          ][match![1]!.length - 1],
+    var level = match![1]!.length;
+
+    // Get heading style from new layered theme system
+    var headingStyles = [
+      theme.textStyle.h1,
+      theme.textStyle.h2,
+      theme.textStyle.h3,
+      theme.textStyle.h4,
+      theme.textStyle.h5,
+      theme.textStyle.h6,
+    ];
+    var headingStyle = headingStyles[level - 1];
+
+    // Get suffix style for h2
+    HeadingSuffixStyle? suffixStyle;
+    if (level == 2) {
+      suffixStyle = theme.textStyle.h2Suffix;
+    }
+
+    // Generate content spans with heading text style
+    var contentSpans = MarkdownComponent.generate(
+      context,
+      "${match.namedGroup('data')}",
+      config.copyWith(style: headingStyle?.textStyle),
+      false,
     );
-    return config.getRich(
-      TextSpan(
-        children: [
-          ...(MarkdownComponent.generate(
-            context,
-            "${match.namedGroup('data')}",
-            conf,
-            false,
-          )),
-          if (match.namedGroup('hash')!.length == 1) ...[
-            const TextSpan(
-              text: "\n ",
-              style: TextStyle(fontSize: 0, height: 0),
-            ),
-            WidgetSpan(
-              child: CustomDivider(
-                height: theme.hrLineThickness,
-                color:
-                    config.style?.color ??
-                    Theme.of(context).colorScheme.outline,
-              ),
-            ),
-          ],
-        ],
-      ),
+
+    // Use ThemedHeading widget for consistent rendering
+    return ThemedHeading(
+      level: level,
+      headingStyle: headingStyle,
+      suffixStyle: suffixStyle,
+      textStyle: headingStyle?.textStyle,
+      contentSpans: contentSpans,
     );
   }
 }
