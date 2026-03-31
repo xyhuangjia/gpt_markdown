@@ -6,7 +6,7 @@ import 'package:gpt_markdown/custom_widgets/indent_widget.dart';
 import 'package:gpt_markdown/custom_widgets/link_button.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart' show MarkdownComponent, MdWidget;
-import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote;
+import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote, ThemedCodeField, ThemedTable;
 
 /// Serializes a Flutter span tree into a stable, comparable string format.
 ///
@@ -160,6 +160,14 @@ class MarkdownSerializer {
       return;
     }
 
+    // ThemedCodeField (new theme system)
+    if (widget is ThemedCodeField) {
+      final lang = widget.name.isNotEmpty ? widget.name : '';
+      final code = _escapeText(widget.codes);
+      _write('CODE_BLOCK(lang="$lang", "$code")');
+      return;
+    }
+
     // Horizontal rule
     if (widget is CustomDivider) {
       _write('HR');
@@ -277,6 +285,12 @@ class MarkdownSerializer {
       return;
     }
 
+    // ThemedTable (new theme system)
+    if (widget is ThemedTable) {
+      _serializeThemedTable(widget);
+      return;
+    }
+
     if (widget is Table) {
       _serializeTable(widget);
       return;
@@ -318,7 +332,7 @@ class MarkdownSerializer {
   void _serializeTable(Table table) {
     _write('TABLE(');
     _depth++;
-    
+
     bool isFirstRow = true;
     for (final row in table.children) {
       final cells = <String>[];
@@ -333,7 +347,40 @@ class MarkdownSerializer {
         _write('ROW(${cells.map((c) => '"$c"').join(', ')})');
       }
     }
-    
+
+    _depth--;
+    _write(')');
+  }
+
+  void _serializeThemedTable(ThemedTable table) {
+    _write('TABLE(');
+    _depth++;
+
+    bool isFirstRow = true;
+    for (final entry in table.rows.asMap().entries) {
+      // Skip separator row (second row with index 1)
+      if (table.hasHeader && entry.key == 1) continue;
+
+      final cells = <String>[];
+      final row = entry.value;
+      for (int i = 0; i < table.maxCol; i++) {
+        final cell = row[i] ?? '';
+        // Skip alignment separator patterns like :--- or :--:
+        if (!RegExp(r"^:?--+:?$").hasMatch(cell.trim()) && cell.trim().isNotEmpty) {
+          cells.add('"${_escapeText(cell.trim())}"');
+        }
+      }
+
+      if (cells.isNotEmpty) {
+        if (isFirstRow) {
+          _write('HEADER(${cells.join(', ')})');
+          isFirstRow = false;
+        } else {
+          _write('ROW(${cells.join(', ')})');
+        }
+      }
+    }
+
     _depth--;
     _write(')');
   }
