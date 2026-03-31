@@ -269,11 +269,11 @@ class HrLine extends BlockMd {
     String text,
     final GptMarkdownConfig config,
   ) {
-    var thickness = GptMarkdownTheme.of(context).hrLineThickness;
-    var color = GptMarkdownTheme.of(context).hrLineColor;
+    final theme = GptMarkdownTheme.of(context);
+    final hrTheme = theme.block.horizontalRule;
     return CustomDivider(
-      height: thickness,
-      color: config.style?.color ?? color,
+      height: hrTheme?.thickness ?? 1,
+      color: config.style?.color ?? hrTheme?.color ?? Colors.grey,
     );
   }
 }
@@ -515,10 +515,10 @@ class BoldMd extends InlineMd {
     final GptMarkdownConfig config,
   ) {
     var match = exp.firstMatch(text.trim());
+    final theme = GptMarkdownTheme.of(context);
+    final boldStyle = theme.textStyle.bold;
     var conf = config.copyWith(
-      style:
-          config.style?.copyWith(fontWeight: FontWeight.bold) ??
-          const TextStyle(fontWeight: FontWeight.bold),
+      style: config.style?.merge(boldStyle) ?? boldStyle ?? const TextStyle(fontWeight: FontWeight.bold),
     );
     return TextSpan(
       children: MarkdownComponent.generate(
@@ -543,13 +543,10 @@ class StrikeMd extends InlineMd {
     final GptMarkdownConfig config,
   ) {
     var match = exp.firstMatch(text.trim());
+    final theme = GptMarkdownTheme.of(context);
+    final strikeStyle = theme.textStyle.strike;
     var conf = config.copyWith(
-      style:
-          config.style?.copyWith(
-            decoration: TextDecoration.lineThrough,
-            decorationColor: config.style?.color,
-          ) ??
-          const TextStyle(decoration: TextDecoration.lineThrough),
+      style: config.style?.merge(strikeStyle) ?? strikeStyle ?? const TextStyle(decoration: TextDecoration.lineThrough),
     );
     return TextSpan(
       children: MarkdownComponent.generate(
@@ -577,10 +574,10 @@ class ItalicMd extends InlineMd {
   ) {
     var match = exp.firstMatch(text.trim());
     var data = match?[1] ?? match?[2];
+    final theme = GptMarkdownTheme.of(context);
+    final italicStyle = theme.textStyle.italic;
     var conf = config.copyWith(
-      style: (config.style ?? const TextStyle()).copyWith(
-        fontStyle: FontStyle.italic,
-      ),
+      style: config.style?.merge(italicStyle) ?? italicStyle ?? const TextStyle(fontStyle: FontStyle.italic),
     );
     return TextSpan(
       children: MarkdownComponent.generate(context, "$data", conf, false),
