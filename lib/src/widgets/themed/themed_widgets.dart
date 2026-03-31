@@ -291,9 +291,12 @@ class ThemedRadio extends StatelessWidget {
         children: [
           Semantics(
             explicitChildNodes: true,
+            // ignore: deprecated_member_use
             child: Radio<bool>(
               value: true,
+              // ignore: deprecated_member_use
               groupValue: value ? true : false,
+              // ignore: deprecated_member_use
               onChanged: value ? null : (v) {},
               activeColor: effectiveTheme.activeColor,
               fillColor: WidgetStateProperty.resolveWith((states) {
