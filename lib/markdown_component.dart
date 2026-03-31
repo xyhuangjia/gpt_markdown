@@ -406,6 +406,8 @@ class UnOrderedList extends BlockMd {
     final GptMarkdownConfig config,
   ) {
     var match = this.exp.firstMatch(text);
+    final theme = GptMarkdownTheme.of(context);
+    final unorderedListTheme = theme.list.unordered;
 
     var child = MdWidget(context, "${match?[1]?.trim()}", true, config: config);
 
@@ -415,15 +417,11 @@ class UnOrderedList extends BlockMd {
           config.copyWith(),
         ) ??
         UnorderedListView(
-          bulletColor:
+          bulletColor: unorderedListTheme?.bulletColor ??
               (config.style?.color ?? DefaultTextStyle.of(context).style.color),
-          padding: 7,
-          spacing: 10,
-          bulletSize:
-              0.3 *
-              (config.style?.fontSize ??
-                  DefaultTextStyle.of(context).style.fontSize ??
-                  kDefaultFontSize),
+          bulletSize: unorderedListTheme?.bulletSize ?? 0.3,
+          spacing: unorderedListTheme?.bulletSpacing ?? 10,
+          padding: unorderedListTheme?.paddingLeft ?? 7,
           textDirection: config.textDirection,
           child: child,
         );
@@ -442,6 +440,8 @@ class OrderedList extends BlockMd {
     final GptMarkdownConfig config,
   ) {
     var match = this.exp.firstMatch(text);
+    final theme = GptMarkdownTheme.of(context);
+    final orderedListTheme = theme.list.ordered;
 
     var no = "${match?[1]}".trim();
 
@@ -457,6 +457,8 @@ class OrderedList extends BlockMd {
           textDirection: config.textDirection,
           style: (config.style ?? const TextStyle()).copyWith(
             fontWeight: FontWeight.w100,
+            color: orderedListTheme?.numberColor ?? config.style?.color,
+            fontSize: orderedListTheme?.numberFontSize,
           ),
           child: child,
         );
@@ -608,6 +610,8 @@ class LatexMathMultiLine extends BlockMd {
     var p0 = exp.firstMatch(text.trim());
     String mathText = p0?[1] ?? p0?[2] ?? '';
     var workaround = config.latexWorkaround ?? (String tex) => tex;
+    final theme = GptMarkdownTheme.of(context);
+    final latexTheme = theme.latex;
 
     var builder =
         config.latexBuilder ??
@@ -618,11 +622,12 @@ class LatexMathMultiLine extends BlockMd {
                 tex,
                 textStyle: textStyle,
                 mathStyle: MathStyle.display,
-                textScaleFactor: 1,
+                textScaleFactor: latexTheme?.textScaleFactor ?? 1,
                 settings: const TexParserSettings(strict: Strict.ignore),
                 options: MathOptions(
                   sizeUnderTextStyle: MathSize.large,
                   color:
+                      latexTheme?.color ??
                       config.style?.color ??
                       Theme.of(context).colorScheme.onSurface,
                   fontSize:
@@ -684,6 +689,8 @@ class LatexMath extends InlineMd {
     p0?.group(0);
     String mathText = p0?[1]?.toString() ?? "";
     var workaround = config.latexWorkaround ?? (String tex) => tex;
+    final theme = GptMarkdownTheme.of(context);
+    final latexTheme = theme.latex;
     var builder =
         config.latexBuilder ??
         (BuildContext context, String tex, TextStyle textStyle, bool inline) =>
@@ -693,11 +700,12 @@ class LatexMath extends InlineMd {
                 tex,
                 textStyle: textStyle,
                 mathStyle: MathStyle.display,
-                textScaleFactor: 1,
+                textScaleFactor: latexTheme?.textScaleFactor ?? 1,
                 settings: const TexParserSettings(strict: Strict.ignore),
                 options: MathOptions(
                   sizeUnderTextStyle: MathSize.large,
                   color:
+                      latexTheme?.color ??
                       config.style?.color ??
                       Theme.of(context).colorScheme.onSurface,
                   fontSize:
@@ -970,6 +978,10 @@ class ImageMd extends InlineMd {
       height = double.tryParse(size?[2]?.toString().trim() ?? 'a');
     }
 
+    // Get theme from GptMarkdownTheme
+    final theme = GptMarkdownTheme.of(context);
+    final imageTheme = theme.image;
+
     final Widget image;
     if (config.imageBuilder != null) {
       image = config.imageBuilder!(context, url);
@@ -1002,7 +1014,33 @@ class ImageMd extends InlineMd {
         ),
       );
     }
-    return WidgetSpan(alignment: PlaceholderAlignment.bottom, child: image);
+
+    // Apply theme properties
+    Widget themedImage = image;
+
+    // Apply width percentage from theme
+    final widthPercentage = imageTheme?.widthPercentage;
+    if (widthPercentage != null && width == null) {
+      themedImage = LayoutBuilder(
+        builder: (context, constraints) {
+          return SizedBox(
+            width: constraints.maxWidth * widthPercentage,
+            child: image,
+          );
+        },
+      );
+    }
+
+    // Apply alignment from theme
+    final alignment = imageTheme?.alignment ?? Alignment.center;
+    if (alignment != Alignment.center) {
+      themedImage = Align(
+        alignment: alignment,
+        child: themedImage,
+      );
+    }
+
+    return WidgetSpan(alignment: PlaceholderAlignment.bottom, child: themedImage);
   }
 }
 
