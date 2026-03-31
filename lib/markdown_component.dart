@@ -807,12 +807,6 @@ class ATagMd extends InlineMd {
       return const TextSpan();
     }
 
-    // First try to find the basic pattern
-    // final basicMatch = RegExp(r'(?<!\!)\[(.*)\]\(').firstMatch(text.trim());
-    // if (basicMatch == null) {
-    //   return const TextSpan();
-    // }
-
     final linkText = text.substring(start, end);
     final urlStart = end + 2;
 
@@ -854,11 +848,20 @@ class ATagMd extends InlineMd {
       false,
     );
     var theme = GptMarkdownTheme.of(context);
+
+    // Use new layered theme system for link styling
+    final linkTheme = theme.link;
+    final linkColor = linkTheme.color ?? Colors.blue;
+    final underlineStyle = linkTheme.underline ?? const LinkUnderlineStyle();
+
     var linkTextSpan = TextSpan(
       children: MarkdownComponent.generate(context, linkText, config, false),
       style: config.style?.copyWith(
-        color: theme.linkColor,
-        decorationColor: theme.linkColor,
+        color: linkColor,
+        decoration: underlineStyle.decoration,
+        decorationColor: underlineStyle.color ?? linkColor,
+        decorationStyle: underlineStyle.decorationStyle,
+        decorationThickness: underlineStyle.thickness,
       ),
     );
 
@@ -885,8 +888,8 @@ class ATagMd extends InlineMd {
       alignment: PlaceholderAlignment.baseline,
       baseline: TextBaseline.alphabetic,
       child: LinkButton(
-        hoverColor: theme.linkHoverColor,
-        color: theme.linkColor,
+        hoverColor: linkTheme.hoverColor ?? Colors.red,
+        color: linkColor,
         onPressed: () {
           config.onLinkTap?.call(url, linkText);
         },
