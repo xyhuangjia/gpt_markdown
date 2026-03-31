@@ -206,17 +206,15 @@ class ThemedBlockQuote extends StatelessWidget {
         );
     return DecoratedBox(
       decoration: BoxDecoration(color: effectiveTheme.backgroundColor),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: effectiveTheme.barWidth,
-              color: effectiveTheme.barColor,
-            ),
-            Expanded(child: child),
-          ],
-        ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: effectiveTheme.barWidth,
+            color: effectiveTheme.barColor,
+          ),
+          Expanded(child: child),
+        ],
       ),
     );
   }
