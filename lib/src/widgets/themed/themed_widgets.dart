@@ -112,19 +112,10 @@ class ThemedLink extends StatefulWidget {
 }
 
 class _ThemedLinkState extends State<ThemedLink> {
-  bool _hovering = false;
-
   @override
   Widget build(BuildContext context) {
-    final theme = widget.theme ?? const MarkdownLinkTheme();
-    final effectiveColor =
-        _hovering
-            ? (theme.hoverColor ?? theme.color ?? Colors.blue)
-            : (theme.color ?? Colors.blue);
     return MouseRegion(
       cursor: widget.theme?.cursor ?? SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovering = true),
-      onExit: (_) => setState(() => _hovering = false),
       child: GestureDetector(onTap: widget.onTap, child: widget.child),
     );
   }
@@ -302,8 +293,8 @@ class ThemedRadio extends StatelessWidget {
             explicitChildNodes: true,
             child: Radio<bool>(
               value: true,
-              groupValue: value,
-              onChanged: null,
+              groupValue: value ? true : false,
+              onChanged: value ? null : (v) {},
               activeColor: effectiveTheme.activeColor,
               fillColor: WidgetStateProperty.resolveWith((states) {
                 if (states.contains(WidgetState.selected)) {
