@@ -6,6 +6,7 @@ import 'package:gpt_markdown/custom_widgets/indent_widget.dart';
 import 'package:gpt_markdown/custom_widgets/link_button.dart';
 import 'package:gpt_markdown/custom_widgets/unordered_ordered_list.dart';
 import 'package:gpt_markdown/gpt_markdown.dart' show MarkdownComponent, MdWidget;
+import 'package:gpt_markdown/src/widgets/themed/themed_widgets.dart' show ThemedBlockQuote;
 
 /// Serializes a Flutter span tree into a stable, comparable string format.
 ///
@@ -204,6 +205,15 @@ class MarkdownSerializer {
 
     // Block quote
     if (widget is BlockQuoteWidget) {
+      _depth++;
+      final content = _serializeChildWidget(widget.child);
+      _depth--;
+      _write('BLOCKQUOTE($content)');
+      return;
+    }
+
+    // ThemedBlockQuote (new theme system)
+    if (widget is ThemedBlockQuote) {
       _depth++;
       final content = _serializeChildWidget(widget.child);
       _depth--;

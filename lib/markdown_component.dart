@@ -355,19 +355,28 @@ class BlockQuote extends InlineMd {
     var child = TextSpan(
       children: MarkdownComponent.generate(context, data, config, true),
     );
+
+    // Use new layered theme system for block quote
+    final theme = GptMarkdownTheme.of(context);
+    final blockQuoteTheme = theme.block.blockQuote;
+
     return TextSpan(
       children: [
         WidgetSpan(
           child: Directionality(
             textDirection: config.textDirection,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: BlockQuoteWidget(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              padding: EdgeInsets.symmetric(
+                vertical: blockQuoteTheme?.paddingTop ?? 2,
+              ),
+              child: ThemedBlockQuote(
+                theme: blockQuoteTheme,
                 direction: config.textDirection,
-                width: 3,
                 child: Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 8.0),
+                  padding: EdgeInsets.only(
+                    left: blockQuoteTheme?.paddingLeft ?? 8.0,
+                    bottom: blockQuoteTheme?.paddingBottom ?? 2,
+                  ),
                   child: config.getRich(child),
                 ),
               ),
@@ -1195,8 +1204,20 @@ class CodeBlockMd extends BlockMd {
     codes = codes.replaceAll(r"```", "");
     bool closed = text.endsWith("```");
 
-    return config.codeBuilder?.call(context, name, codes, closed) ??
-        CodeField(name: name, codes: codes);
+    // Use custom codeBuilder if provided
+    if (config.codeBuilder != null) {
+      return config.codeBuilder!.call(context, name, codes, closed);
+    }
+
+    // Use themed code block with theme system
+    final theme = GptMarkdownTheme.of(context);
+    final codeBlockTheme = theme.block.codeBlock;
+
+    return ThemedCodeField(
+      name: name,
+      codes: codes,
+      theme: codeBlockTheme,
+    );
   }
 }
 
