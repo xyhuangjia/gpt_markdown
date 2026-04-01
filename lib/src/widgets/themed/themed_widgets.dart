@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../theme/styles/list_style.dart' as md_theme;
 import '../../theme/theme.dart';
+import '../../../custom_widgets/markdown_config.dart';
 
 /// Themed heading widget for h1-h6 with CSS-like decorations
 class ThemedHeading extends StatelessWidget {
@@ -22,13 +23,24 @@ class ThemedHeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget child;
     if (level == 2 && headingStyle?.contentDecoration != null) {
-      return _buildDecoratedH2(context);
+      child = _buildDecoratedH2(context);
+    } else if (level == 1 && headingStyle?.borderBottom != null) {
+      child = _buildH1WithBorder(context);
+    } else {
+      child = Text.rich(TextSpan(children: contentSpans), style: textStyle);
     }
-    if (level == 1) {
-      return _buildH1WithDivider(context);
+
+    final mt = headingStyle?.marginTop ?? 0;
+    final mb = headingStyle?.marginBottom ?? 0;
+    if (mt > 0 || mb > 0) {
+      child = Padding(
+        padding: EdgeInsets.only(top: mt, bottom: mb),
+        child: child,
+      );
     }
-    return Text.rich(TextSpan(children: contentSpans), style: textStyle);
+    return child;
   }
 
   Widget _buildDecoratedH2(BuildContext context) {
@@ -36,20 +48,25 @@ class ThemedHeading extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 0,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: decoration.background,
-                borderRadius: decoration.borderRadius,
-              ),
-              padding: decoration.padding,
-              child: Text.rich(
-                TextSpan(
-                  children: contentSpans,
-                  style: TextStyle(color: decoration.textColor),
+            Flexible(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: decoration.background,
+                  borderRadius: decoration.borderRadius,
+                ),
+                padding: decoration.padding,
+                child: Text.rich(
+                  TextSpan(
+                    children: contentSpans,
+                    style: TextStyle(color: decoration.textColor),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ),
@@ -68,22 +85,13 @@ class ThemedHeading extends StatelessWidget {
     );
   }
 
-  Widget _buildH1WithDivider(BuildContext context) {
-    final theme = GptMarkdownTheme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text.rich(TextSpan(children: contentSpans)),
-        const SizedBox(height: 0),
-        Divider(
-          height: theme.block.horizontalRule?.thickness ?? 1,
-          thickness: theme.block.horizontalRule?.thickness ?? 1,
-          color:
-              theme.block.horizontalRule?.color ??
-              Theme.of(context).colorScheme.outline,
-        ),
-      ],
+  Widget _buildH1WithBorder(BuildContext context) {
+    final border = headingStyle!.borderBottom!;
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(bottom: border),
+      ),
+      child: Text.rich(TextSpan(children: contentSpans)),
     );
   }
 }
@@ -322,6 +330,7 @@ class ThemedTable extends StatelessWidget {
     required this.hasHeader,
     required this.maxCol,
     this.theme,
+    this.config,
   });
 
   final List<Map<int, String>> rows;
@@ -329,6 +338,7 @@ class ThemedTable extends StatelessWidget {
   final bool hasHeader;
   final int maxCol;
   final TableTheme? theme;
+  final GptMarkdownConfig? config;
 
   @override
   Widget build(BuildContext context) {
@@ -357,13 +367,13 @@ class ThemedTable extends StatelessWidget {
                 effectiveTheme.cellBorder?.color ??
                 Theme.of(context).colorScheme.onSurface,
           ),
-          children: _buildRows(effectiveTheme),
+          children: _buildRows(context, effectiveTheme),
         ),
       ),
     );
   }
 
-  List<TableRow> _buildRows(TableTheme theme) {
+  List<TableRow> _buildRows(BuildContext context, TableTheme theme) {
     return rows
         .asMap()
         .entries
@@ -390,13 +400,23 @@ class ThemedTable extends StatelessWidget {
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 child: Align(
                   alignment: _getAlignment(columnAlignments[index]),
-                  child: Text(data.trim()),
+                  child: _buildCellContent(context, data.trim()),
                 ),
               );
             }),
           );
         })
         .toList();
+  }
+
+  /// Build cell content with inline markdown parsing
+  Widget _buildCellContent(BuildContext context, String content) {
+    // If config is provided, use it to parse inline markdown
+    if (config != null) {
+      return config!.buildInlineMarkdown(context, content, includeGlobalComponents: false);
+    }
+    // Fallback to plain text if no config provided
+    return Text(content);
   }
 
   Alignment _getAlignment(TextAlign align) {

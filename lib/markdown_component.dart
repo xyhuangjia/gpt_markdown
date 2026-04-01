@@ -1162,6 +1162,7 @@ class TableMd extends BlockMd {
       hasHeader: hasHeader,
       maxCol: maxCol,
       theme: tableTheme,
+      config: config,
     );
   }
 }

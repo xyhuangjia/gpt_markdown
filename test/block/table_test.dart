@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../utils/test_helpers.dart';
 
@@ -75,6 +76,51 @@ void main() {
 ''');
       final output = getSerializedOutput(tester);
       expect(output, contains('TABLE'));
+    });
+
+    testWidgets('table with bold content in cell', (tester) async {
+      await pumpMarkdown(tester, '''
+| Header |
+|--------|
+| **bold** |
+''');
+      expect(find.byType(Table), findsOneWidget);
+    });
+
+    testWidgets('table with italic content in cell', (tester) async {
+      await pumpMarkdown(tester, '''
+| Header |
+|--------|
+| *italic* |
+''');
+      expect(find.byType(Table), findsOneWidget);
+    });
+
+    testWidgets('table with link content in cell', (tester) async {
+      await pumpMarkdown(tester, '''
+| Header |
+|--------|
+| [link](https://example.com) |
+''');
+      expect(find.byType(Table), findsOneWidget);
+    });
+
+    testWidgets('table with inline code in cell', (tester) async {
+      await pumpMarkdown(tester, '''
+| Header |
+|--------|
+| `code` |
+''');
+      expect(find.byType(Table), findsOneWidget);
+    });
+
+    testWidgets('table with mixed markdown in cell', (tester) async {
+      await pumpMarkdown(tester, '''
+| Header |
+|--------|
+| **bold** and *italic* |
+''');
+      expect(find.byType(Table), findsOneWidget);
     });
   });
 }

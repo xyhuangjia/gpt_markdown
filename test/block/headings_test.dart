@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../utils/test_helpers.dart';
 
@@ -49,6 +49,18 @@ void main() {
 
     testWidgets('multiple headings render', (tester) async {
       await pumpMarkdown(tester, '# First\n\n## Second');
+      expect(find.byType(RichText), findsWidgets);
+    });
+
+    testWidgets('H1 heading renders correctly', (tester) async {
+      await pumpMarkdown(tester, '# Heading 1');
+      // Verify H1 renders with RichText
+      expect(find.byType(RichText), findsWidgets);
+    });
+
+    testWidgets('H2 heading renders with decorated container', (tester) async {
+      await pumpMarkdown(tester, '## Heading 2');
+      // Verify H2 renders correctly
       expect(find.byType(RichText), findsWidgets);
     });
   });

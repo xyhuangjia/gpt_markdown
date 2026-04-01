@@ -214,6 +214,39 @@ class GptMarkdownConfig {
     );
   }
 
+  /// Build inline markdown content as a Widget.
+  /// This is useful for rendering markdown in table cells or other inline contexts.
+  Widget buildInlineMarkdown(
+    BuildContext context,
+    String content, {
+    bool includeGlobalComponents = false,
+  }) {
+    final spans = MarkdownComponent.generate(
+      context,
+      content,
+      this,
+      includeGlobalComponents,
+    );
+    return RichText(
+      text: TextSpan(
+        children: spans.map((span) {
+          if (span is WidgetSpan) {
+            return span;
+          }
+          if (span is TextSpan) {
+            return TextSpan(
+              text: span.text,
+              style: span.style,
+              children: span.children,
+            );
+          }
+          return TextSpan(text: span.toPlainText(), style: span.style);
+        }).toList(),
+      ),
+      textDirection: textDirection,
+    );
+  }
+
   /// A method to check if the configuration is the same.
   bool isSame(GptMarkdownConfig other) {
     return style == other.style &&
