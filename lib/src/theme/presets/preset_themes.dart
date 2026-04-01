@@ -40,7 +40,7 @@ class GitHubThemeFactory {
           ),
           borderBottom: BorderSide(color: borderColor, width: 1),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         h2: HeadingStyle(
           textStyle: TextStyle(
@@ -50,7 +50,7 @@ class GitHubThemeFactory {
           ),
           borderBottom: BorderSide(color: borderColor, width: 1),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         h3: HeadingStyle(
           textStyle: TextStyle(
@@ -59,7 +59,7 @@ class GitHubThemeFactory {
             color: textColor,
           ),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         h4: HeadingStyle(
           textStyle: TextStyle(
@@ -68,7 +68,7 @@ class GitHubThemeFactory {
             color: textColor,
           ),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         h5: HeadingStyle(
           textStyle: TextStyle(
@@ -77,7 +77,7 @@ class GitHubThemeFactory {
             color: textColor,
           ),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         h6: HeadingStyle(
           textStyle: TextStyle(
@@ -86,7 +86,7 @@ class GitHubThemeFactory {
             color: isDark ? const Color(0xFF8B949E) : const Color(0xFF57606A),
           ),
           marginTop: 24,
-          marginBottom: 16,
+          marginBottom: 15,
         ),
         bold: TextStyle(fontWeight: FontWeight.w600, color: textColor),
         italic: const TextStyle(fontStyle: FontStyle.italic),
@@ -103,7 +103,7 @@ class GitHubThemeFactory {
       block: MarkdownBlockTheme(
         blockQuote: BlockQuoteTheme(
           barColor: borderColor,
-          barWidth: 4,
+          barWidth: 5,
           paddingLeft: 16,
           paddingTop: 0,
           paddingBottom: 0,
@@ -198,7 +198,7 @@ class MediumThemeFactory {
                 'medium-content-sans-serif-font,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif',
           ),
           marginTop: 32,
-          marginBottom: 8,
+          marginBottom: 15,
         ),
         h2: HeadingStyle(
           textStyle: TextStyle(
@@ -209,7 +209,7 @@ class MediumThemeFactory {
                 'medium-content-sans-serif-font,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif',
           ),
           marginTop: 30,
-          marginBottom: 10,
+          marginBottom: 15,
         ),
         h3: HeadingStyle(
           textStyle: TextStyle(
@@ -220,7 +220,7 @@ class MediumThemeFactory {
                 'medium-content-sans-serif-font,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif',
           ),
           marginTop: 28,
-          marginBottom: 8,
+          marginBottom: 15,
         ),
         h4: HeadingStyle(
           textStyle: TextStyle(
@@ -229,7 +229,7 @@ class MediumThemeFactory {
             color: textColor,
           ),
           marginTop: 24,
-          marginBottom: 8,
+          marginBottom: 15,
         ),
         bold: TextStyle(fontWeight: FontWeight.w600, color: textColor),
         italic: const TextStyle(fontStyle: FontStyle.italic),
@@ -243,7 +243,7 @@ class MediumThemeFactory {
       block: MarkdownBlockTheme(
         blockQuote: BlockQuoteTheme(
           barColor: linkColor,
-          barWidth: 3,
+          barWidth: 5,
           paddingLeft: 24,
           textStyle: TextStyle(
             color: secondaryText,

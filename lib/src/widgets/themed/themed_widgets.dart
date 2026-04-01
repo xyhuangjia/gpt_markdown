@@ -88,9 +88,7 @@ class ThemedHeading extends StatelessWidget {
   Widget _buildH1WithBorder(BuildContext context) {
     final border = headingStyle!.borderBottom!;
     return Container(
-      decoration: BoxDecoration(
-        border: Border(bottom: border),
-      ),
+      decoration: BoxDecoration(border: Border(bottom: border)),
       child: Text.rich(TextSpan(children: contentSpans)),
     );
   }
@@ -209,22 +207,49 @@ class ThemedBlockQuote extends StatelessWidget {
     final effectiveTheme =
         theme ??
         BlockQuoteTheme(
-          barColor: Theme.of(context).colorScheme.onSurfaceVariant,
+          barColor: const Color(0xFFEF7060),
           barWidth: 3,
         );
     return DecoratedBox(
       decoration: BoxDecoration(color: effectiveTheme.backgroundColor),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: effectiveTheme.barWidth,
-            color: effectiveTheme.barColor,
-          ),
-          Expanded(child: child),
-        ],
+      child: CustomPaint(
+        foregroundPainter: _BlockQuoteBarPainter(
+          color: effectiveTheme.barColor ?? const Color(0xFFEF7060),
+          width: effectiveTheme.barWidth,
+          direction: direction,
+        ),
+        child: child,
       ),
     );
+  }
+}
+
+/// A custom painter that draws a vertical bar for block quotes.
+class _BlockQuoteBarPainter extends CustomPainter {
+  _BlockQuoteBarPainter({
+    required this.color,
+    required this.width,
+    required this.direction,
+  });
+
+  final Color color;
+  final double width;
+  final TextDirection direction;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final isLeft = direction == TextDirection.ltr;
+    final start = isLeft ? 0.0 : size.width - width;
+    final rect = Rect.fromLTWH(start, 0, width, size.height);
+    final paint = Paint()..color = color;
+    canvas.drawRect(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BlockQuoteBarPainter oldDelegate) {
+    return color != oldDelegate.color ||
+        width != oldDelegate.width ||
+        direction != oldDelegate.direction;
   }
 }
 
@@ -413,7 +438,11 @@ class ThemedTable extends StatelessWidget {
   Widget _buildCellContent(BuildContext context, String content) {
     // If config is provided, use it to parse inline markdown
     if (config != null) {
-      return config!.buildInlineMarkdown(context, content, includeGlobalComponents: false);
+      return config!.buildInlineMarkdown(
+        context,
+        content,
+        includeGlobalComponents: false,
+      );
     }
     // Fallback to plain text if no config provided
     return Text(content);

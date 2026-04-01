@@ -291,7 +291,7 @@ class _NiceThemeFactory {
           ),
           borderBottom: BorderSide(color: niceText, width: 1),
           marginTop: 24,
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         h2: HeadingStyle(
           textStyle: TextStyle(fontSize: 20.8),
@@ -313,7 +313,7 @@ class _NiceThemeFactory {
             marginRight: 3,
           ),
           marginTop: 20,
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         h2Suffix: HeadingSuffixStyle(
           show: true,
@@ -329,19 +329,19 @@ class _NiceThemeFactory {
             color: niceText,
           ),
           marginTop: 18,
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         h4: HeadingStyle(
           textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         h5: HeadingStyle(
           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         h6: HeadingStyle(
           textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-          marginBottom: 0,
+          marginBottom: 15,
         ),
         bold: const TextStyle(fontWeight: FontWeight.bold),
         italic: const TextStyle(fontStyle: FontStyle.italic),

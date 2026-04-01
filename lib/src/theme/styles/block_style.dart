@@ -171,7 +171,7 @@ class TableTheme {
 class BlockQuoteTheme {
   const BlockQuoteTheme({
     this.barColor,
-    this.barWidth = 3,
+    this.barWidth = 5,
     this.backgroundColor,
     this.paddingTop = 2,
     this.paddingBottom = 2,

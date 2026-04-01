@@ -107,7 +107,7 @@ class HeadingStyle {
     this.borderBottom,
     this.contentDecoration,
     this.marginTop = 16.0,
-    this.marginBottom = 8.0,
+    this.marginBottom = 15.0,
     this.paddingTop = 0.0,
     this.paddingBottom = 0.0,
   });

@@ -12,7 +12,7 @@ class BlockQuoteWidget extends StatelessWidget {
     required this.child,
     required this.direction,
     required this.color,
-    this.width = 3,
+    this.width = 5,
   });
 
   /// The child widget to be indented.
